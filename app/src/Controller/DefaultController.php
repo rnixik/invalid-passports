@@ -2,20 +2,16 @@
 
 namespace App\Controller;
 
-use App\Service\BadRequestException;
-use App\Service\InvalidPassportsService;
+use App\Service\InvalidPassportsServiceInterface;
 
 class DefaultController
 {
-    /** @var InvalidPassportsService */
+    /** @var InvalidPassportsServiceInterface */
     protected $invalidPassportsService;
 
-    public function __construct()
+    public function __construct(InvalidPassportsServiceInterface $service)
     {
-        $redis = new \Predis\Client([
-            'host' => 'redis',
-        ]);
-        $this->invalidPassportsService = new InvalidPassportsService($redis);
+        $this->invalidPassportsService = $service;
     }
 
     public function validatePassport(): void
@@ -27,6 +23,13 @@ class DefaultController
         $series = $_REQUEST['series'];
         $number = $_REQUEST['number'];
 
+        if (strlen($series) !== 4) {
+            $this->exitWithBadRequestError("Length of series must be 4");
+        }
+        if (strlen($number) !== 6) {
+            $this->exitWithBadRequestError("Length of number must be 6");
+        }
+
         try {
             $isValid = $this->invalidPassportsService->isValid($series, $number);
             if ($isValid) {
@@ -37,8 +40,11 @@ class DefaultController
 
             header('Content-Type: application/json');
             echo '{"result":"' . $validityString . '"}';
-        } catch (BadRequestException $exception) {
-            $this->exitWithBadRequestError( $exception->getMessage());
+        } catch (\RuntimeException $exception) {
+            error_log($exception);
+            header("HTTP/1.1 500 Internal Server Error");
+            header('Content-Type: application/json');
+            echo '{"error":"' . $exception->getMessage() . '"}';
         }
     }
 

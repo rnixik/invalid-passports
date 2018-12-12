@@ -5,9 +5,10 @@ services:
       context: ./app
     volumes:
     - ./app:/var/www/app
-    - ./app/php_opcache.ini:/usr/local/etc/php/conf.d/opcache.ini
+    - ./app/php.ini:/usr/local/etc/php/conf.d/custom.ini
     - sock:/sock
     working_dir: /var/www/app
+    tmpfs: /mnt/tmpfs
   nginx:
     build:
       context: ./nginx

@@ -16,7 +16,7 @@ Where `SERIES` is 4  digits, `NUMBER` is 6 digits of passport.
 * `{"result":"valid"}`
 * `{"result":"invalid"}`
 
-#### Code 400
+#### Code 400, 500
 
 `{"error":"Details"}`
 
@@ -27,6 +27,7 @@ Where `SERIES` is 4  digits, `NUMBER` is 6 digits of passport.
 
 * docker
 * docker-compose
+* 2GB RAM minimum
 
 ### How to start:
 
@@ -35,14 +36,36 @@ Where `SERIES` is 4  digits, `NUMBER` is 6 digits of passport.
 3. Run `docker-compose up -d --build`
 4. Run `docker-compose exec app composer install`
 
+## Update data storage
 
-### Testing
+`docker-compose exec -T app php bin/update.php`
+
+Should be added to cron.
+
+## Implementations
+
+There some implementation which were developed as experiments:
+
+* Redis - using redis as storage
+* Shmop - using shared memory as storage (one big string)
+* Include - using tmpfs and `include` php array
+
+Default implementation can be changed in src/Application.php.  
+Run update after changing.
+
+## Testing
 
 
 ```
 docker-compose exec app vendor/bin/phpunit tests/
 ```
 
+
+## Useful things
+
+```
+docker-compose exec app php bin/benchmark.php
+```
 
 ## License
 

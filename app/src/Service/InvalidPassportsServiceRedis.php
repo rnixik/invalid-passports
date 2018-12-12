@@ -4,7 +4,7 @@ namespace App\Service;
 
 use Predis\Client;
 
-class InvalidPassportsService
+class InvalidPassportsServiceRedis implements InvalidPassportsServiceInterface
 {
     /** @var Client */
     protected $redis;
@@ -15,11 +15,7 @@ class InvalidPassportsService
     }
 
     /**
-     * Validates series and number of passport by expiration
-     *
-     * @param string $series length should be equal to 4
-     * @param string $number length should be equal to 6
-     * @return bool
+     * @inheritdoc
      */
     public function isValid(string $series, string $number): bool
     {
@@ -27,21 +23,31 @@ class InvalidPassportsService
         return !$this->redis->exists($key);
     }
 
+
+    /**
+     * @inheritdoc
+     */
+    public function addRecordToStoreBuffer(string $series, string $number): void
+    {
+        $key = $this->getKey($series, $number);
+        $this->redis->set($key, true);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function flushBufferToStore(): void
+    {
+        // Nothing to do
+    }
+
     /**
      * @param string $series
      * @param string $number
      * @return string
-     * @throws BadRequestException
      */
     protected function getKey(string $series, string $number): string
     {
-        if (strlen($series) !== 4) {
-            throw new BadRequestException("Length of series must be 4");
-        }
-        if (strlen($number) !== 6) {
-            throw new BadRequestException("Length of number must be 6");
-        }
-
         return $series . $number;
     }
 }

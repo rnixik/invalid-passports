@@ -24,5 +24,6 @@ RUN echo "listen.mode = 0666" >> /usr/local/etc/php-fpm.d/zz-docker.conf
 RUN docker-php-ext-configure opcache --enable-opcache \
   && docker-php-ext-install opcache
 
+RUN docker-php-ext-install shmop
 
 USER ${WEB_USER_ID}

@@ -2,14 +2,13 @@
 
 namespace App\Tests;
 
-use App\Service\BadRequestException;
-use App\Service\InvalidPassportsService;
+use App\Service\InvalidPassportsServiceRedis;
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
 
-class InvalidPassportsServiceTest extends TestCase
+class InvalidPassportsServiceRedisTest extends TestCase
 {
-    /** @var InvalidPassportsService */
+    /** @var InvalidPassportsServiceRedis */
     protected $service;
 
     /** @var Client */
@@ -18,7 +17,7 @@ class InvalidPassportsServiceTest extends TestCase
     protected function setUp()
     {
         $this->redisStub = $this->createMock(Client::class);
-        $this->service = new InvalidPassportsService($this->redisStub);
+        $this->service = new InvalidPassportsServiceRedis($this->redisStub);
     }
 
     public function testIsValidValid()
@@ -41,15 +40,13 @@ class InvalidPassportsServiceTest extends TestCase
         $this->assertFalse($this->service->isValid(1111, 223344));
     }
 
-    public function testIsValidExceptionSeries()
+    public function testAddRecordToStoreBuffer()
     {
-        $this->expectException(BadRequestException::class);
-        $this->service->isValid(111, 223344);
-    }
+        $this->redisStub->expects($this->once())->method('__call')->with(
+            $this->equalTo('set'),
+            $this->anything()
+        );
 
-    public function testIsValidExceptionNumber()
-    {
-        $this->expectException(BadRequestException::class);
-        $this->service->isValid(1111, 23344);
+        $this->service->addRecordToStoreBuffer(1111, 22333444);
     }
 }
