@@ -48,6 +48,12 @@ class DefaultController
         }
     }
 
+    public function resetOpcache()
+    {
+        opcache_reset();
+        echo 'Ok';
+    }
+
     protected function exitWithBadRequestError(string $errorMessage): void
     {
         header("HTTP/1.1 400 Bad request");

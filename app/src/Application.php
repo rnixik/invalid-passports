@@ -20,12 +20,16 @@ class Application
 
         $service = $this->getInvalidPassportsService();
         $controller = new DefaultController($service);
+        if ($_SERVER['REQUEST_URI'] === '/reset-opcache') {
+            $controller->resetOpcache();
+            exit;
+        }
         $controller->validatePassport();
     }
 
     public static function getDefaultImplementation()
     {
-        return self::IMPLEMENTATION_SHMOP;
+        return self::IMPLEMENTATION_INCLUDE;
     }
 
     /**
