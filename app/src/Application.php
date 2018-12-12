@@ -16,6 +16,8 @@ class Application
 
     public function run()
     {
+        $this->setErrorHandler();
+
         $service = $this->getInvalidPassportsService();
         $controller = new DefaultController($service);
         $controller->validatePassport();
@@ -49,5 +51,12 @@ class Application
         }
 
         return $service;
+    }
+
+    protected function setErrorHandler()
+    {
+        set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+            throw new \ErrorException($errstr);
+        });
     }
 }

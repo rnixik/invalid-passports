@@ -40,7 +40,7 @@ class DefaultController
 
             header('Content-Type: application/json');
             echo '{"result":"' . $validityString . '"}';
-        } catch (\RuntimeException $exception) {
+        } catch (\Throwable $exception) {
             error_log($exception);
             header("HTTP/1.1 500 Internal Server Error");
             header('Content-Type: application/json');
