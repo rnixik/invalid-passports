@@ -27,7 +27,7 @@ Where `SERIES` is 4  digits, `NUMBER` is 6 digits of passport.
 
 * docker
 * docker-compose
-* 2GB RAM minimum
+* 4GB RAM minimum
 
 ### How to start:
 
