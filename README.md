@@ -44,7 +44,7 @@ Should be added to cron.
 
 ## Implementations
 
-There some implementation which were developed as experiments:
+There are some implementations which were developed as experiments:
 
 * Redis - using redis as storage
 * Shmop - using shared memory as storage (one big string)
