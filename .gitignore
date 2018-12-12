@@ -1,0 +1,5 @@
+nbproject
+.idea
+
+.env
+docker-compose.override.yml
