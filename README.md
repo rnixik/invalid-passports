@@ -38,7 +38,7 @@ Where `SERIES` is 4  digits, `NUMBER` is 6 digits of passport.
 
 ## Update data storage
 
-`docker-compose exec -T app bash bin/download-file.sh`
+`docker-compose exec -T app bash bin/download-file.sh`  
 `docker-compose exec -T app php bin/update.php`
 
 Should be added to cron.
