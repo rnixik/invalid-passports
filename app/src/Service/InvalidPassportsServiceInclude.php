@@ -27,12 +27,7 @@ class InvalidPassportsServiceInclude implements InvalidPassportsServiceInterface
     }
 
     /**
-     * Adds new pair of series and number to buffer for storing.
-     *
-     * Call self::flushBufferToStore to save all added records.
-     *
-     * @param string $series
-     * @param string $number
+     * @inheritdoc
      */
     public function addRecordToStoreBuffer(string $series, string $number): void
     {
@@ -41,9 +36,7 @@ class InvalidPassportsServiceInclude implements InvalidPassportsServiceInterface
     }
 
     /**
-     * Updates store with actual values of invalid pairs from buffer.
-     *
-     * @see self::addRecordToStoreBuffer
+     * @inheritdoc
      */
     public function flushBufferToStore(): void
     {

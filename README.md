@@ -50,6 +50,7 @@ There are some implementations which were developed as experiments:
 * Redis - using redis as storage
 * Shmop - using shared memory as storage (one big string)
 * Include - using tmpfs and `include` php array
+* IncludeSeries - using tmpfs and `include` php arrays by series
 
 Default implementation can be changed in src/Application.php.  
 Run update after changing.
