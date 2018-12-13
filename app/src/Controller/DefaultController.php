@@ -48,10 +48,12 @@ class DefaultController
         }
     }
 
-    public function resetOpcache()
+    public function prepareCache()
     {
         opcache_reset();
-        echo 'Ok';
+        // Use call to service to prepare opcache
+        $this->invalidPassportsService->isValid(1111, 223344);
+        echo 'OK';
     }
 
     protected function exitWithBadRequestError(string $errorMessage): void

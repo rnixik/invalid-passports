@@ -13,3 +13,5 @@ $parser = new \App\Service\SourceParser();
 
 $added = $parser->parseAndStore($fileName, $storageService);
 echo "Added: $added." . PHP_EOL;
+
+echo "Reset opcache: " . file_get_contents('http://nginx/prepare-cache') . PHP_EOL;

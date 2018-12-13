@@ -20,8 +20,8 @@ class Application
 
         $service = $this->getInvalidPassportsService();
         $controller = new DefaultController($service);
-        if ($_SERVER['REQUEST_URI'] === '/reset-opcache') {
-            $controller->resetOpcache();
+        if ($_SERVER['REQUEST_URI'] === '/prepare-cache') {
+            $controller->prepareCache();
             exit;
         }
         $controller->validatePassport();
@@ -37,9 +37,9 @@ class Application
      */
     public function getInvalidPassportsService(): InvalidPassportsServiceInterface
     {
-        $serviceNameFromRequest = $_REQUEST['service'] ?? self::getDefaultImplementation();
+        $serviceName = self::getDefaultImplementation();
 
-        switch ($serviceNameFromRequest) {
+        switch ($serviceName) {
             case self::IMPLEMENTATION_REDIS:
                 $redis = new \Predis\Client(['host' => 'redis']);
                 $service = new InvalidPassportsServiceRedis($redis);
