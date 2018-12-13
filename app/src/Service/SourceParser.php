@@ -23,8 +23,11 @@ class SourceParser
                 continue;
             }
             list($series, $number) = $row;
-            if (strlen($series) !== 4 || strlen($number) !== 6) {
-                break;
+            if (strlen($series) !== 4
+                || strlen($number) !== 6
+                || !is_numeric($series)
+                || !is_numeric($number)) {
+                continue;
             }
             $storage->addRecordToStoreBuffer($series, $number);
             $rowsNumber++;
