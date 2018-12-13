@@ -6,6 +6,11 @@ use Predis\Client;
 
 class InvalidPassportsServiceRedis implements InvalidPassportsServiceInterface
 {
+    /**
+     * Depends on how often source is updated
+     */
+    protected const KEY_TTL = 3600 * 24;
+
     /** @var Client */
     protected $redis;
 
@@ -30,7 +35,7 @@ class InvalidPassportsServiceRedis implements InvalidPassportsServiceInterface
     public function addRecordToStoreBuffer(string $series, string $number): void
     {
         $key = $this->getKey($series, $number);
-        $this->redis->set($key, true);
+        $this->redis->set($key, true, 'EX', self::KEY_TTL);
     }
 
     /**

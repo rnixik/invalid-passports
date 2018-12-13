@@ -29,7 +29,7 @@ class Application
 
     public static function getDefaultImplementation()
     {
-        return self::IMPLEMENTATION_INCLUDE;
+        return self::IMPLEMENTATION_REDIS;
     }
 
     /**
