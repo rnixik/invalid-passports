@@ -20,6 +20,10 @@ class Application
 
         $service = $this->getInvalidPassportsService();
         $controller = new DefaultController($service);
+        if ($_SERVER['REQUEST_URI'] === '/reset-cache') {
+            $controller->resetCache();
+            exit;
+        }
         if ($_SERVER['REQUEST_URI'] === '/prepare-cache') {
             $controller->prepareCache();
             exit;
@@ -29,7 +33,7 @@ class Application
 
     public static function getDefaultImplementation()
     {
-        return self::IMPLEMENTATION_REDIS;
+        return self::IMPLEMENTATION_INCLUDE;
     }
 
     /**
