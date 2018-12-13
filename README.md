@@ -1,5 +1,6 @@
 # Passport validation service
 Validates passport's series and number using FMS database.
+Data source is http://guvm.mvd.ru/upload/expired-passports/list_of_expired_passports.csv.bz2
 
 ## API
 
