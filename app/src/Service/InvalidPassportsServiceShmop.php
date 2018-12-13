@@ -4,12 +4,19 @@ namespace App\Service;
 
 class InvalidPassportsServiceShmop implements InvalidPassportsServiceInterface
 {
-    protected const ID_KEY = 0xff3;
+    protected const DEFAULT_ID_KEY = 0xff5;
 
-    // If size changes, ID_KEY should be changed also
+    // If size changes, DEFAULT_ID_KEY should be changed also
     protected const MAX_DATA_SIZE = 2147483648; //2GB
 
     protected $buffer = [];
+
+    protected $key;
+
+    public function __construct($key = self::DEFAULT_ID_KEY)
+    {
+        $this->key = $key;
+    }
 
     /**
      * @inheritdoc
@@ -18,11 +25,14 @@ class InvalidPassportsServiceShmop implements InvalidPassportsServiceInterface
     {
         $key = $this->getKey($series, $number);
 
-        $resource = @shmop_open(self::ID_KEY, 'a', 0, 0);
+        $resource = @shmop_open($this->key, 'a', 0, 0);
         if (!empty($resource)) {
             $dataStr = shmop_read($resource, 0, 0);
             if ($dataStr) {
                 $data = unserialize($dataStr);
+                if (!is_array($data)) {
+                    throw new \RuntimeException("Shmop data is array");
+                }
                 $dataStr = '';
                 return !isset($data[$key]);
             }
@@ -51,9 +61,12 @@ class InvalidPassportsServiceShmop implements InvalidPassportsServiceInterface
         if ($dataSize >= self::MAX_DATA_SIZE) {
             throw new \RuntimeException("DataSize exceeded limit");
         }
-        $resource = shmop_open(self::ID_KEY, 'c', 0600, self::MAX_DATA_SIZE);
-        shmop_delete($resource);
-        $resource = shmop_open(self::ID_KEY, 'c', 0600, $dataSize);
+        $resourceToDelete = @shmop_open($this->key, 'c', 0, 0);
+        if ($resourceToDelete) {
+            shmop_delete($resourceToDelete);
+            shmop_close($resourceToDelete);
+        }
+        $resource = shmop_open($this->key, 'c', 0600, $dataSize);
         shmop_write($resource, $dataStr, 0);
     }
 

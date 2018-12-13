@@ -12,7 +12,7 @@ class InvalidPassportsServiceShmopTest extends TestCase
 
     protected function setUp()
     {
-        $this->service = new InvalidPassportsServiceShmop();
+        $this->service = new InvalidPassportsServiceShmop(0xae3);
     }
 
     protected function tearDown()
@@ -34,5 +34,15 @@ class InvalidPassportsServiceShmopTest extends TestCase
         $this->service->flushBufferToStore();
 
         $this->assertFalse($this->service->isValid(1111, 223344));
+    }
+
+    public function testIsValidClearStorage()
+    {
+        $this->service->addRecordToStoreBuffer(1111, 223344);
+        $this->service->flushBufferToStore();
+        // Clear storage
+        $this->service->flushBufferToStore();
+
+        $this->assertTrue($this->service->isValid(1111, 223344));
     }
 }
