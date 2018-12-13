@@ -28,7 +28,6 @@ class InvalidPassportsServiceRedis implements InvalidPassportsServiceInterface
         return !$this->redis->exists($key);
     }
 
-
     /**
      * @inheritdoc
      */
