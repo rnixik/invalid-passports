@@ -4,24 +4,21 @@ namespace App\Service;
 
 class InvalidPassportsServiceInclude implements InvalidPassportsServiceInterface
 {
-    protected const STORAGE_PATH = '/mnt/tmpfs/data.php';
+    protected const STORAGE_FILE_PATH = '/mnt/tmpfs/data.php';
+    protected const STORAGE_BUFFER_FILE_PATH = '/mnt/tmpfs/data_buffer.php';
 
-    protected $buffer = '';
-
-    public function __construct()
-    {
-        $this->buffer = '<?php return [' . PHP_EOL;
-    }
+    /** @var \SplFileObject|null */
+    protected $bufferFile;
 
     /**
      * @inheritdoc
      */
     public function isValid(string $series, string $number): bool
     {
-        if (!is_readable(self::STORAGE_PATH)) {
-            throw new \RuntimeException("Storage path '" . self::STORAGE_PATH . "' is not readable");
+        if (!is_readable(self::STORAGE_FILE_PATH)) {
+            throw new \RuntimeException("Storage file '" . self::STORAGE_FILE_PATH . "' is not readable");
         }
-        $data = include(self::STORAGE_PATH);
+        $data = include(self::STORAGE_FILE_PATH);
         $key = $this->getKey($series, $number);
         return !isset($data[$key]);
     }
@@ -31,8 +28,11 @@ class InvalidPassportsServiceInclude implements InvalidPassportsServiceInterface
      */
     public function addRecordToStoreBuffer(string $series, string $number): void
     {
+        if (!$this->bufferFile) {
+            $this->bufferFile = $this->initBufferFile();
+        }
         $key = $this->getKey($series, $number);
-        $this->buffer .= "'$key' => true," . PHP_EOL;
+        $this->bufferFile->fwrite("'$key'=>true,");
     }
 
     /**
@@ -40,9 +40,13 @@ class InvalidPassportsServiceInclude implements InvalidPassportsServiceInterface
      */
     public function flushBufferToStore(): void
     {
-        $this->buffer .= '];' . PHP_EOL;
-        file_put_contents(self::STORAGE_PATH, $this->buffer);
-        $this->buffer = '';
+        if (!$this->bufferFile) {
+            $this->bufferFile = $this->initBufferFile();
+        }
+        $this->bufferFile->fwrite("];");
+        copy($this->bufferFile->getRealPath(), self::STORAGE_FILE_PATH);
+        unlink($this->bufferFile->getRealPath());
+        $this->bufferFile = null;
     }
 
     /**
@@ -53,5 +57,12 @@ class InvalidPassportsServiceInclude implements InvalidPassportsServiceInterface
     protected function getKey(string $series, string $number): string
     {
         return $series . $number;
+    }
+
+    protected function initBufferFile(): \SplFileObject
+    {
+        $bufferFile = new \SplFileObject(self::STORAGE_BUFFER_FILE_PATH, 'w');
+        $bufferFile->fwrite('<?php return[');
+        return $bufferFile;
     }
 }

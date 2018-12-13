@@ -5,7 +5,7 @@ Validates passport's series and number using FMS database.
 
 ### Request
 
-`GET /series=SERIES&number=NUMBER`
+`GET /?series=SERIES&number=NUMBER`
 
 Where `SERIES` is 4  digits, `NUMBER` is 6 digits of passport.
 
@@ -27,7 +27,7 @@ Where `SERIES` is 4  digits, `NUMBER` is 6 digits of passport.
 
 * docker
 * docker-compose
-* 4GB RAM minimum
+* 6GB RAM minimum
 
 ### How to start:
 
@@ -47,10 +47,14 @@ Should be added to cron.
 
 There are some implementations which were developed as experiments:
 
-* Redis - using redis as storage
-* Shmop - using shared memory as storage (one big string)
-* Include - using tmpfs and `include` php array
-* IncludeSeries - using tmpfs and `include` php arrays by series
+* __Redis__ - using redis as storage. 
+It has 4-6ms.
+* __Shmop__ - using shared memory as storage (one big string). 
+It has 0.5s and large memory consumption.
+* __Include__ - using tmpfs and `include` one php array. 
+Large memory consumption.
+* __IncludeSeries__ - using tmpfs and `include` php arrays by series.
+It has unstable response time: 0.6ms - 6ms. Low memory consumption.
 
 Default implementation can be changed in src/Application.php.  
 Run update after changing.

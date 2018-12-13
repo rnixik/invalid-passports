@@ -8,7 +8,9 @@ services:
     - ./app/php.ini:/usr/local/etc/php/conf.d/custom.ini
     - sock:/sock
     working_dir: /var/www/app
-    tmpfs: /mnt/tmpfs:exec,mode=777
+    tmpfs:
+    - /mnt/tmpfs:exec,mode=777
+    - /mnt/tmpfs_buffer:exec,mode=777
   nginx:
     build:
       context: ./nginx

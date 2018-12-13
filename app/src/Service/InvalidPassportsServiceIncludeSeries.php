@@ -5,8 +5,11 @@ namespace App\Service;
 class InvalidPassportsServiceIncludeSeries implements InvalidPassportsServiceInterface
 {
     protected const STORAGE_PATH = '/mnt/tmpfs/';
+    protected const STORAGE_BUFFER_PATH = '/mnt/tmpfs_buffer/';
 
     protected $buffer = [];
+
+    protected $openFiles = [];
 
     /**
      * @inheritdoc
@@ -16,6 +19,9 @@ class InvalidPassportsServiceIncludeSeries implements InvalidPassportsServiceInt
         if (!is_readable(self::STORAGE_PATH)) {
             throw new \RuntimeException("Storage path '" . self::STORAGE_PATH . "' is not readable");
         }
+
+        $series = intval($series);
+        $number = intval($number);
 
         $path = $this->getPathForSeries($series);
         if (file_exists($path)) {
@@ -31,10 +37,17 @@ class InvalidPassportsServiceIncludeSeries implements InvalidPassportsServiceInt
      */
     public function addRecordToStoreBuffer(string $series, string $number): void
     {
-        if (!isset($this->buffer[$series])) {
-            $this->buffer[$series] = [];
+        $series = intval($series);
+        $number = intval($number);
+        if (isset($this->openFiles[$series])) {
+            $file = $this->openFiles[$series];
+        } else {
+            $file = new \SplFileObject(self::STORAGE_BUFFER_PATH . $series . '.php', "w");
+            $this->openFiles[$series] = $file;
+            $file->fwrite("<?php return [");
         }
-        $this->buffer[$series][] = $number;
+
+        $file->fwrite("$number=>true,");
     }
 
     /**
@@ -43,19 +56,13 @@ class InvalidPassportsServiceIncludeSeries implements InvalidPassportsServiceInt
     public function flushBufferToStore(): void
     {
         $this->clearStorage();
-
-        foreach ($this->buffer as $series => $numbers) {
-            $subStr = '';
-            foreach ($numbers as $number) {
-                $subStr .= "'$number'=>true,";
-            }
-            $str = '<?php return [';
-            $str .= $subStr;
-            $str .= '];';
-            file_put_contents($this->getPathForSeries($series), $str);
+        /** @var \SplFileObject $file */
+        foreach ($this->openFiles as $series => $file) {
+            $file->fwrite("];");
+            copy($file->getRealPath(), $this->getPathForSeries($series));
+            unlink($file->getRealPath());
         }
-
-        $this->buffer = [];
+        $this->openFiles = [];
     }
 
     protected function clearStorage()
