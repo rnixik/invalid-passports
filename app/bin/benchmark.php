@@ -4,8 +4,8 @@ $invalidSeries = '7504';
 $invalidNumber = '328185';
 
 for ($i = 0; $i < 10; $i += 1) {
-    $series = 1234;
-    $number = 123456;
+    $series = 1234 - $i;
+    $number = 123456 + $i;
     if (rand(1, 10) > 7) {
         $series = $invalidSeries;
         $number = $invalidNumber;
