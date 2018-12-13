@@ -29,6 +29,9 @@ class DefaultController
         if (strlen($number) !== 6) {
             $this->exitWithBadRequestError("Length of number must be 6");
         }
+        if (!is_numeric($series) || !is_numeric($number)) {
+            $this->exitWithBadRequestError("Values of series and number should be numeric");
+        }
 
         try {
             $isValid = $this->invalidPassportsService->isValid($series, $number);
