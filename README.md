@@ -65,9 +65,16 @@ docker-compose exec app vendor/bin/phpunit tests/
 
 ## Useful things
 
+### Benchmarking
+
 ```
 docker-compose exec app php bin/benchmark.php
 ```
+
+### API for caching:
+
+* `GET /reset-cache` - reset cache of application
+* `GET /prepare-cache` - prepare cache of application
 
 ## License
 
