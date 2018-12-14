@@ -65,6 +65,8 @@ Storage should be prepared with `console < tarantool/prepare_storage.lua`.
 Default implementation can be changed in src/Application.php.  
 Run update after changing.
 
+The most valuable are: __IncludeParts__ and __Redis__.
+
 ## Testing
 
 
