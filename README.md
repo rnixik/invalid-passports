@@ -55,7 +55,7 @@ It has 500ms. High memory consumption.
 * __Include__ - using tmpfs and `include` one php array. 
 High memory consumption.
 * __IncludeParts__ - using tmpfs and `include` predefined number of php arrays. 
-It has 0.5ms - 7000ms. High memory consumption.
+It has 0.6ms - 2.4ms, avg: 0.7ms. High memory consumption: 6,5GB for 1kk records.
 * __IncludeSeries__ - using tmpfs and `include` php arrays by series.
 It has unstable response time: 0.6ms - 30ms, avg: 1ms. Low memory consumption.
 
