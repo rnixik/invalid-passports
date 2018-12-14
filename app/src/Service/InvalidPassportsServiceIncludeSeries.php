@@ -65,6 +65,14 @@ class InvalidPassportsServiceIncludeSeries implements InvalidPassportsServiceInt
         $this->openFiles = [];
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function prepareCache(): void
+    {
+        $this->isValid(1111, 223344);
+    }
+
     protected function clearStorage()
     {
         for ($i = 0; $i <= 9999; $i += 1) {

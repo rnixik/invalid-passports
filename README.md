@@ -28,7 +28,7 @@ Where `SERIES` is 4  digits, `NUMBER` is 6 digits of passport.
 
 * docker
 * docker-compose
-* 6GB RAM minimum
+* 7GB RAM minimum
 
 ### How to start:
 
@@ -51,9 +51,11 @@ There are some implementations which were developed as experiments:
 * __Redis__ - using redis as storage. 
 It has 4-6ms.
 * __Shmop__ - using shared memory as storage (one big string). 
-It has 0.5s. High memory consumption.
+It has 500ms. High memory consumption.
 * __Include__ - using tmpfs and `include` one php array. 
 High memory consumption.
+* __IncludeParts__ - using tmpfs and `include` predefined number of php arrays. 
+It has 0.5ms - 7000ms. High memory consumption.
 * __IncludeSeries__ - using tmpfs and `include` php arrays by series.
 It has unstable response time: 0.6ms - 30ms, avg: 1ms. Low memory consumption.
 

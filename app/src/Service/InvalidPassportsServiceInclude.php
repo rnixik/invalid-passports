@@ -50,6 +50,14 @@ class InvalidPassportsServiceInclude implements InvalidPassportsServiceInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function prepareCache(): void
+    {
+        $this->isValid(1111, 223344);
+    }
+
+    /**
      * @param string $series
      * @param string $number
      * @return string

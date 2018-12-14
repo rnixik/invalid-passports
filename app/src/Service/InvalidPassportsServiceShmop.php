@@ -70,6 +70,14 @@ class InvalidPassportsServiceShmop implements InvalidPassportsServiceInterface
         shmop_write($resource, $dataStr, 0);
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function prepareCache(): void
+    {
+        $this->isValid(1111, 223344);
+    }
+
     protected function getKey(string $series, string $number): string
     {
         return $series . $number;

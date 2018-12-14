@@ -30,4 +30,9 @@ interface InvalidPassportsServiceInterface
      * @see self::addRecordToStoreBuffer
      */
     public function flushBufferToStore(): void;
+
+    /**
+     * Prepares cache for current implementation if it is possible.
+     */
+    public function prepareCache(): void;
 }

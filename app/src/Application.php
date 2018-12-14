@@ -4,6 +4,7 @@ namespace App;
 
 use App\Controller\DefaultController;
 use App\Service\InvalidPassportsServiceInclude;
+use App\Service\InvalidPassportsServiceIncludeParts;
 use App\Service\InvalidPassportsServiceIncludeSeries;
 use App\Service\InvalidPassportsServiceInterface;
 use App\Service\InvalidPassportsServiceRedis;
@@ -13,6 +14,7 @@ class Application
 {
     public const IMPLEMENTATION_REDIS = 'redis';
     public const IMPLEMENTATION_INCLUDE = 'include';
+    public const IMPLEMENTATION_INCLUDE_PARTS = 'include_parts';
     public const IMPLEMENTATION_INCLUDE_SERIES = 'include_series';
     public const IMPLEMENTATION_SHMOP = 'shmop';
 
@@ -35,7 +37,7 @@ class Application
 
     public static function getDefaultImplementation()
     {
-        return self::IMPLEMENTATION_INCLUDE_SERIES;
+        return self::IMPLEMENTATION_INCLUDE_PARTS;
     }
 
     /**
@@ -58,6 +60,9 @@ class Application
                 break;
             case self::IMPLEMENTATION_INCLUDE_SERIES:
                 $service = new InvalidPassportsServiceIncludeSeries();
+                break;
+            case self::IMPLEMENTATION_INCLUDE_PARTS:
+                $service = new InvalidPassportsServiceIncludeParts();
                 break;
             default:
                 throw new \RuntimeException("Implementation is not defined");

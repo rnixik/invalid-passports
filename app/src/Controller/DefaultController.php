@@ -59,7 +59,7 @@ class DefaultController
 
     public function prepareCache()
     {
-        $this->invalidPassportsService->isValid(1111, 223344);
+        $this->invalidPassportsService->prepareCache();
         echo 'OK';
     }
 

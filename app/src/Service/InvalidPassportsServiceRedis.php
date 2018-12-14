@@ -40,6 +40,14 @@ class InvalidPassportsServiceRedis implements InvalidPassportsServiceInterface
     /**
      * @inheritdoc
      */
+    public function prepareCache(): void
+    {
+        $this->isValid(1111, 223344);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function flushBufferToStore(): void
     {
         // Nothing to do
