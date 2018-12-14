@@ -48,9 +48,9 @@ Should be added to cron.
 
 There are some implementations which were developed as experiments:
 
-* __Redis__ - using redis as storage. 
+* __Redis__ - using redis as a storage. 
 It has 4-6ms.
-* __Shmop__ - using shared memory as storage (one big string). 
+* __Shmop__ - using shared memory as a storage (one big string). 
 It has 500ms. High memory consumption.
 * __Include__ - using tmpfs and `include` one php array. 
 High memory consumption.
@@ -58,6 +58,9 @@ High memory consumption.
 It has 0.6ms - 2.4ms, avg: 0.7ms. High memory consumption: 6,5GB for 1kk records.
 * __IncludeSeries__ - using tmpfs and `include` php arrays by series.
 It has unstable response time: 0.6ms - 30ms, avg: 1ms. Low memory consumption.
+* __Tarantool__ - using tarantool as a storage.
+It has 1-8ms. Removing old records should be done via tarantool console.
+Storage should be prepared with `console < tarantool/prepare_storage.lua`.
 
 Default implementation can be changed in src/Application.php.  
 Run update after changing.

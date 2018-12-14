@@ -20,5 +20,9 @@ services:
     - sock:/sock
   redis:
     image: "redis"
+  tarantool:
+    image: "tarantool/tarantool:1"
+    volumes:
+    - ./tarantool:/var/tarantool
 volumes:
   sock:

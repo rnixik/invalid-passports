@@ -9,6 +9,10 @@ use App\Service\InvalidPassportsServiceIncludeSeries;
 use App\Service\InvalidPassportsServiceInterface;
 use App\Service\InvalidPassportsServiceRedis;
 use App\Service\InvalidPassportsServiceShmop;
+use App\Service\InvalidPassportsServiceTarantool;
+use Tarantool\Client\Client;
+use Tarantool\Client\Connection\StreamConnection;
+use Tarantool\Client\Packer\PurePacker;
 
 class Application
 {
@@ -17,6 +21,7 @@ class Application
     public const IMPLEMENTATION_INCLUDE_PARTS = 'include_parts';
     public const IMPLEMENTATION_INCLUDE_SERIES = 'include_series';
     public const IMPLEMENTATION_SHMOP = 'shmop';
+    public const IMPLEMENTATION_TARANTOOL = 'tarantool';
 
     public function run()
     {
@@ -51,6 +56,13 @@ class Application
             case self::IMPLEMENTATION_REDIS:
                 $redis = new \Predis\Client(['host' => 'redis']);
                 $service = new InvalidPassportsServiceRedis($redis);
+                break;
+            case self::IMPLEMENTATION_TARANTOOL:
+                 $conn = new StreamConnection('tcp://tarantool:3301', [
+                     'tcp_nodelay' => true,
+                 ]);
+                $client = new Client($conn, new PurePacker());
+                $service = new InvalidPassportsServiceTarantool($client);
                 break;
             case self::IMPLEMENTATION_SHMOP:
                 $service = new InvalidPassportsServiceShmop();
