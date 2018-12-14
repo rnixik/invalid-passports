@@ -5,6 +5,8 @@ services:
       args:
         WEB_USER_ID: 1000 #local user id
         WEB_USER_NAME: developer #any user name
+    #volumes:
+    #- /tmp/list_of_expired_passports.csv:/tmp/list_of_expired_passports.csv
   nginx:
     build:
       args:

@@ -51,11 +51,11 @@ There are some implementations which were developed as experiments:
 * __Redis__ - using redis as storage. 
 It has 4-6ms.
 * __Shmop__ - using shared memory as storage (one big string). 
-It has 0.5s and large memory consumption.
+It has 0.5s. High memory consumption.
 * __Include__ - using tmpfs and `include` one php array. 
-Large memory consumption.
+High memory consumption.
 * __IncludeSeries__ - using tmpfs and `include` php arrays by series.
-It has unstable response time: 0.6ms - 6ms. Low memory consumption.
+It has unstable response time: 0.6ms - 30ms, avg: 1ms. Low memory consumption.
 
 Default implementation can be changed in src/Application.php.  
 Run update after changing.
